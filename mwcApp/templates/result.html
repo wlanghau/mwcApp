@@ -1,0 +1,302 @@
+<!-- The resulting page based off the user inputted data for the Production Record -->
+<!-- Creates a table for each category of food or drink for the given school day and school -->
+<!-- For each table there will be a calculated planned value and then text inputs for all other fields -->
+<!-- An API call will send all inputted information to the database upon submission -->
+{% extends "layout.html" %}
+{% block content %}
+<h1>My May Café Production Record</h1>
+<form action = "/" method = "POST">
+   <br><br>
+   <table border = 1 bgcolor="DarkGray">
+
+      <!-- SUMMARY TABLE WITH ALL INITIAL INPUT -->
+      {% for key, value in apiData.result.items() %}
+
+      <tr>
+         <th name="{{ key }}" value="{{ value }}"> {{ key }} </th>
+         <td> {{ value }} </td>
+      </tr>
+      {% endfor %}
+   </table><br><br>
+
+   <!-- HIDE INITIAL INPUT SO IT IS STILL SUBMITTED -->
+   {% for key, value in apiData.result.items() %}
+   <input type="hidden" name="{{ key }}" value="{{ value }}">
+   {% endfor %}
+
+   Adult Meals: <input type="number" name="adult-meals" id="adult-meals" required><br><br>
+  Adult Earned Meals: <input type="number" name="adult-earned-meals"" id="adult-earned-meals" required><br><br>
+  Reimbursable Meal Count: <input type="number" name="reimbursable-meals" id="reimbursable-meals" required><br><br>
+
+   <!-- ALL MEALS HAVE A GENERATED DRINKS TABLE -->
+   <h2>Drinks</h2>
+   <table border = 1 bgcolor="DarkGray">
+
+      <tr>
+         <th scope="col"> Component </th>
+         <th scope="col"> Planned </th>
+         <th scope="col"> Prepared </th>
+         <th scope="col"> Served </th>
+         <th scope="col"> Leftover </th>
+         <th scope="col"> Wasted </th>
+         <th scope="col"> Extra Needed </th>
+         <th scope="col"> Notes </th>
+      </tr>
+      {% for key,value in apiData.drinks.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+      {% endfor %}
+   </table><br><br>
+
+   
+
+   <!-- ALL MEALS HAVE A GENERATED MAIN MENU TABLE -->
+   <h2>Main Menu - {{ apiData.menuDay }}</h2>
+   <table border = 1 bgcolor="DarkGray">
+      <tr>
+         <th> Component </th>
+         <th> Planned </th>
+         <th> Prepared </th>
+         <th> Served </th>
+         <th> Leftover </th>
+         <th> Wasted </th>
+         <th> Extra Needed </th>
+         <th> Notes </th>
+      </tr>
+      {% for key,value in apiData.components.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+      {% endfor %}
+   </table><br><br>
+
+   <!-- ALL MEALS HAVE A GENERATED FRUIT TABLE -->
+   <h2>Fruits</h2>
+   <table border = 1 bgcolor="DarkGray">
+      <tr>
+         <th> Component </th>
+         <th> Planned </th>
+         <th> Prepared </th>
+         <th> Served </th>
+         <th> Leftover </th>
+         <th> Wasted </th>
+         <th> Extra Needed </th>
+         <th> Notes </th>
+      </tr>
+      {% for key,value in apiData.fruits.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+      {% endfor %}
+   </table><br><br>
+
+   <!-- GENERATE A SALAD TABLE IF IT IS LUNCH -->
+   {% if apiData.isLunch %}
+   <h2>Salad Bar</h2>
+   <table border = 1 bgcolor="DarkGray">
+      <tr>
+         <th colspan="8"> Salad Bar</th>
+      </tr>
+      <tr>
+         <th> Component </th>
+         <th> Planned </th>
+         <th> Prepared </th>
+         <th> Served </th>
+         <th> Leftover </th>
+         <th> Wasted </th>
+         <th> Extra Needed </th>
+         <th> Notes </th>
+      </tr>
+      {% for key,value in apiData.saladComponents.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+      {% endfor %}
+   </table><br><br>
+   {% endif %}
+
+   <!-- GENERATE AN EXPANDED SALAD TABLE IF IT IS AN EXPANDED SCHOOL -->
+   {% if apiData.isExpanded and apiData.isLunch %}
+   <h2>Salad Bar Add-On</h2>
+   <table border = 1 bgcolor="DarkGray">
+      <tr>
+         <th> Component </th>
+         <th> Planned </th>
+         <th> Prepared </th>
+         <th> Served </th>
+         <th> Leftover </th>
+         <th> Wasted </th>
+         <th> Extra Needed </th>
+         <th> Notes </th>
+      </tr>
+      {% for key,value in apiData.expandedComponents.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+      {% endfor %}
+   </table><br><br>
+   {% endif %}
+
+   
+
+   <!-- GENERATE A GRAB AND GO TABLE IF IT IS A GRAB AD GO SCHOOL -->
+   {% if apiData.isGrab and apiData.isLunch%}
+   <h2>Grab N Go</h2>
+   <table border = 1 bgcolor="DarkGray">
+      <tr>
+         <th> Component </th>
+         <th> Planned </th>
+         <th> Prepared </th>
+         <th> Served </th>
+         <th> Leftover </th>
+         <th> Wasted </th>
+         <th> Extra Needed </th>
+         <th> Notes </th>
+      </tr>
+      {% for key,value in apiData.grabAndGoLunchComponents.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+
+      {% endfor %}
+   </table><br><br>
+   {% endif %}
+
+   {% if apiData.isGrab and not apiData.isLunch%}
+   <h2>Grab N Go</h2>
+   <table border = 1 bgcolor="DarkGray">
+      <tr>
+         <th> Component </th>
+         <th> Planned </th>
+         <th> Prepared </th>
+         <th> Served </th>
+         <th> Leftover </th>
+         <th> Wasted </th>
+         <th> Extra Needed </th>
+         <th> Notes </th>
+      </tr>
+      {% for key,value in apiData.grabAndGoBreakComponents.items() %}
+      <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
+      <tr>
+         <th scope="row"> {{ key }} </th>
+         <td>{{ value }}</td>
+         <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
+            onchange="autocalculate('{{ key }}')" required></td>
+         <td id="wastedNum-{{ key }}" ></td>
+         <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}">
+         <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
+         <td><input type="text" id="notes-{{ key }}" name="notes-{{ key }}" placeholder="Any notes?"></td>
+      </tr>
+
+      {% endfor %}
+   </table><br><br>
+   
+   {% endif %}
+   <input type = "submit" id="submit" value = "Submit" class="btn btn-success btn-lg center-block">
+   <br><br><br>
+   
+   <style>
+   table {
+      position: relative;
+      margin-top: 0px;
+      margin-bottom: 20px;
+      margin-right: 20px;
+      margin-left: 20px;
+      background-color: maroon;
+      color: white;
+   }
+   td {
+      padding: 6px;
+      text-align: center;
+      white-space: nowrap;  
+   }
+   input {
+      color: black;
+      border-color: black;
+   }
+
+
+</style>
+</form>
+
+<script type="text/javascript">
+      function autocalculate(comp){
+         var prep = document.getElementById("prepared-"+comp).value;
+         var served = document.getElementById("served-"+comp).value;
+         var leftover = document.getElementById("leftover-"+comp).value;
+         document.getElementById("wastedNum-"+comp).innerHTML = prep - served - leftover;
+         document.getElementById("wasted-"+comp).value = prep - served - leftover;
+      }
+   </script>
+{% endblock content %}

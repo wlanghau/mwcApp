@@ -1,0 +1,62 @@
+<!-- Home Page for the web application that provides an input form for the production records -->
+{% extends "layout.html" %}
+{% block content %}
+
+	<h1>My May Café Production Record</h1>
+	
+	<form action = "/generateTable/" method = "POST">
+	{% csrf_token %}
+	Submission Date: <input type="date" name="date" d="submission-date" required><br><br>
+	
+		School:
+		<select name="school" required>
+			{% for school in schools %}
+
+			<option>{{ school }}</option>
+
+			{% endfor %}
+		</select>
+	<br><br>
+	Meal: <select name="meal" required>
+		<option>Breakfast</option>
+		<option>Lunch</option>
+		</select>
+	<br><br>
+	
+  Daily Notes: 
+  	<br><textarea rows="4" cols="50" id='daily-notes' name="daily-notes" placeholder="How did the day go?"></textarea><br><br>
+  	
+  	{% for fruitName in numFruits %}
+		{{ fruitName }}
+		<select name="{{ fruitName }}">
+			<option>None</option>
+			{% for fruit in fruits %}
+			<option>{{ fruit }}</option>
+			{% endfor %}
+		</select><br><br>
+	{% endfor %}
+  	<input type = "submit" value = "Submit" class="btn btn-success btn-lg center-block">
+  	<br><br>
+  </form>
+  <style>
+  form {
+      position: relative;
+      margin-top: 0px;
+      margin-bottom: 20px;
+      margin-right: 20px;
+      margin-left: 50px;
+   }
+   input {
+      color: black;
+      border-color: black;
+   }
+   select {
+   	color: black;
+   	border-color: black;
+   }
+   textarea {
+   	color: black;
+   	border-color: black;
+   }
+</style>
+{% endblock content %}
