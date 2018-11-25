@@ -4,7 +4,7 @@ import datetime
 
 # Authorize API credentials to use the Google Sheets API
 scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('./mwcApp/credentials/mwcapp-223202-090925329ed5.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('./mwcApp/credentials/mwcapp-223202-a4fa51b3bd61.json', scope)
 gc = gspread.authorize(credentials)
 
 # Retrieve the three Google Sheets "database" files
