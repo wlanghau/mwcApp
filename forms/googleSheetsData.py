@@ -4,13 +4,13 @@ import datetime
 
 # Authorize API credentials to use the Google Sheets API
 scope = ['https://spreadsheets.google.com/feeds']
-credentials = ServiceAccountCredentials.from_json_keyfile_name('./mwcApp/credentials/mwcapp-223202-a4fa51b3bd61.json', scope)
+credentials = ServiceAccountCredentials.from_json_keyfile_name('./mwcApp/credentials/MWCapp-168978c46517.json', scope)
 gc = gspread.authorize(credentials)
 
 # Retrieve the three Google Sheets "database" files
-mainDatabaseKey = '1SHD8PpHVwbqErSb98IUfSCvPmtuBuoharKSvHHW3Snw'
-orderingToolKey = '1ZbMTvlplLRQZYawlHr2ptkaubn_iukXVQZD0uDRsFTo'
-productionRecord = '1H2F_SLN_8LXagXuzxVDrbBjngjCpWwrUxH3SmLhtoS4'
+mainDatabaseKey = '19Rszi38ZKUsZqQ1UORV-a-rEORx1LpuFRgjyggEcFrE'
+orderingToolKey = '109ngaK12BJS7u116vbBbrawjPxIxjNlqi8MjoecuRZI'
+productionRecord = '160B7q0IdDYTzjRPemBwbCYVP3jLDhCt3BnD8Av3skAs'
 mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
 orderingToolSpreadsheet = gc.open_by_key(orderingToolKey)
 productionRecordSpreadsheet = gc.open_by_key(productionRecord)
@@ -71,12 +71,13 @@ def getBaselineOptInData():
     baselineOptInData = baselineOptInSheet.get_all_values()
     baselineOptInDict = {}
 
+	# Necessary?
     liveSchoolArray = getLiveSchools()
     for x in range(1,len(baselineOptInData)):
         baselineOptInDict[baselineOptInData[x][0]] = {}
-        for y in range(1,len(baselineOptInData[x])):
+        for y in range(1,len(baselineOptInData[x]) - 1):
         	if len(baselineOptInData[x][y]) > 1:
-        		percentage = int(baselineOptInData[x][y].strip('%'))/100
+        		percentage = float(baselineOptInData[x][y].strip('%'))/100
         		baselineOptInDict[baselineOptInData[x][0]][baselineOptInData[0][y]] = percentage
 
     return baselineOptInDict

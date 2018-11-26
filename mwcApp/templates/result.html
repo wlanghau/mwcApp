@@ -6,11 +6,12 @@
 {% block content %}
 <h1>My May Café Production Record</h1>
 <form action = "/" method = "POST">
+{% csrf_token %}
    <br><br>
    <table border = 1 bgcolor="DarkGray">
 
       <!-- SUMMARY TABLE WITH ALL INITIAL INPUT -->
-      {% for key, value in apiData.result.items() %}
+      {% for key, value in result.items %}
 
       <tr>
          <th name="{{ key }}" value="{{ value }}"> {{ key }} </th>
@@ -20,7 +21,7 @@
    </table><br><br>
 
    <!-- HIDE INITIAL INPUT SO IT IS STILL SUBMITTED -->
-   {% for key, value in apiData.result.items() %}
+   {% for key, value in result.items %}
    <input type="hidden" name="{{ key }}" value="{{ value }}">
    {% endfor %}
 
@@ -42,7 +43,7 @@
          <th scope="col"> Extra Needed </th>
          <th scope="col"> Notes </th>
       </tr>
-      {% for key,value in apiData.drinks.items() %}
+      {% for key,value in drinks.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
@@ -61,7 +62,7 @@
    
 
    <!-- ALL MEALS HAVE A GENERATED MAIN MENU TABLE -->
-   <h2>Main Menu - {{ apiData.menuDay }}</h2>
+   <h2>Main Menu - {{ menuDay }}</h2>
    <table border = 1 bgcolor="DarkGray">
       <tr>
          <th> Component </th>
@@ -73,7 +74,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
-      {% for key,value in apiData.components.items() %}
+      {% for key,value in components.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
@@ -102,7 +103,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
-      {% for key,value in apiData.fruits.items() %}
+      {% for key,value in fruits.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
@@ -122,7 +123,7 @@
    </table><br><br>
 
    <!-- GENERATE A SALAD TABLE IF IT IS LUNCH -->
-   {% if apiData.isLunch %}
+   {% if isLunch %}
    <h2>Salad Bar</h2>
    <table border = 1 bgcolor="DarkGray">
       <tr>
@@ -138,7 +139,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
-      {% for key,value in apiData.saladComponents.items() %}
+      {% for key,value in saladComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
@@ -159,7 +160,7 @@
    {% endif %}
 
    <!-- GENERATE AN EXPANDED SALAD TABLE IF IT IS AN EXPANDED SCHOOL -->
-   {% if apiData.isExpanded and apiData.isLunch %}
+   {% if isExpanded and isLunch %}
    <h2>Salad Bar Add-On</h2>
    <table border = 1 bgcolor="DarkGray">
       <tr>
@@ -172,7 +173,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
-      {% for key,value in apiData.expandedComponents.items() %}
+      {% for key,value in expandedComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
@@ -195,7 +196,7 @@
    
 
    <!-- GENERATE A GRAB AND GO TABLE IF IT IS A GRAB AD GO SCHOOL -->
-   {% if apiData.isGrab and apiData.isLunch%}
+   {% if isGrab and isLunch%}
    <h2>Grab N Go</h2>
    <table border = 1 bgcolor="DarkGray">
       <tr>
@@ -208,7 +209,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
-      {% for key,value in apiData.grabAndGoLunchComponents.items() %}
+      {% for key,value in grabAndGoLunchComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
@@ -229,7 +230,7 @@
    </table><br><br>
    {% endif %}
 
-   {% if apiData.isGrab and not apiData.isLunch%}
+   {% if isGrab and not isLunch%}
    <h2>Grab N Go</h2>
    <table border = 1 bgcolor="DarkGray">
       <tr>
@@ -242,7 +243,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
-      {% for key,value in apiData.grabAndGoBreakComponents.items() %}
+      {% for key,value in grabAndGoBreakComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
          <th scope="row"> {{ key }} </th>
