@@ -22,4 +22,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
 	path('', views.enter_pr_data),
 	path('generateTable/', views.generate_table),
+	path('insertProduction/', views.send_to_database),
 ]

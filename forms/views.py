@@ -15,10 +15,10 @@ from forms.googleSheetsData import getMenuCalData,getSchoolData,getMenuData,getB
 #credentials = ServiceAccountCredentials.from_json_keyfile_name('./MWCapp-6ea127e5c10a.json', scope)
 #gc = gspread.authorize(credentials)
 
-def getGrabAndGo(school,menu,meal):
+def getGrabAndGo(school,menu,meal, menuSheetDict):
 
-	# Necessary to call again?
-    menuSheetDict = getMenuData()
+	# Necessary to call again? Going to add to args
+    # menuSheetDict = getMenuData()
     if meal == "Lunch":
         if school == "East Boston HS":
             return menuSheetDict["gg-ebhs-"+menu]['components']
@@ -30,18 +30,17 @@ def getGrabAndGo(school,menu,meal):
         return []
 		
 def plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDict):
-    returnDict = {}
-
-    for component in menuDayComponents:
-        try:
-            attendance = schoolDict[school]['attendance']
-            mealOptIn = schoolDict[school][meal]
-            componentOptIn = baselineOptInDict[component][school]
-            planned = attendance*mealOptIn*componentOptIn
-            returnDict[component] = int(planned)
-        except Exception as e:
-            returnDict[component] = 0
-    return returnDict
+	returnDict = {}
+	attendance = schoolDict[school]['attendance']
+	mealOptIn = schoolDict[school][meal]
+	for component in menuDayComponents:
+		try:
+			componentOptIn = baselineOptInDict[component][school]
+			planned = attendance*mealOptIn*componentOptIn
+			returnDict[component] = int(planned)
+		except Exception as e:
+			returnDict[component] = 0
+	return returnDict
 
 def enter_pr_data(req):
 	context = {}
@@ -52,22 +51,22 @@ def enter_pr_data(req):
 	
 def generate_table(req):
 
-	context = {}
-	context['msg'] = ''
-	context['err'] = ''
-	req.POST = req.POST.copy()
-	
-	del req.POST['csrfmiddlewaretoken']
-	context['result'] = req.POST
-
-	menuSheetDict = getMenuData()
-	
-	# Need to get all schools? Add optional arg for school name
-	schoolDict = getSchoolData()
-	menuCalDict = getMenuCalData()
-	baselineOptInDict = getBaselineOptInData()
-	
 	if req.method == 'POST':
+		context = {}
+		context['msg'] = ''
+		context['err'] = ''
+		req.POST = req.POST.copy()
+		
+		del req.POST['csrfmiddlewaretoken']
+		context['result'] = req.POST
+
+		menuSheetDict = getMenuData()
+		
+		# Need to get all schools? Add optional arg for school name
+		schoolDict = getSchoolData()
+		# menuCalDict = getMenuCalData()
+		baselineOptInDict = getBaselineOptInData()
+	
 		meal=req.POST['meal']
 		date = req.POST['date']
 		
@@ -77,20 +76,20 @@ def generate_table(req):
 			menuCalDict[date]
 		except Exception as e:
 			context['err'] += 'Not a valid menu day: '+date
-			redirect('', context)
+			redirect('/', context)
 			
 		try:
 			menuSheetDict[menuDay]['components']
 		except Exception as e:
 			context['err'] += 'Cannot find menu day components'
-			return redirect('', context)
+			return redirect('/', context)
 				
 	
 		menuDayComponents = menuSheetDict[menuDay]['components']
 		fruits = [req.POST[x] for x in ['Fruit 1', 'Fruit 2', 'Fruit 3'] if req.POST[x] is not None]
 		saladComponents = menuSheetDict['al: salad bar']['components']
 		grabAndGoBreakComponents = menuSheetDict['hsb: grab n go']['components']
-		grabAndGoLunchComponents = getGrabAndGo(req.POST['school'], menuDay, meal)
+		grabAndGoLunchComponents = getGrabAndGo(req.POST['school'], menuDay, meal, menuSheetDict)
 		expandedComponents = menuSheetDict['hsl: salad bar add-ons']['components']
 		school = req.POST['school']
 	
@@ -116,3 +115,11 @@ def generate_table(req):
 		return render(req, 'result.html', context)
 	else:
 		return redirect('')
+		
+def send_to_database(req):
+	print(rerererewrere)
+	if req.method == 'POST':
+		sendToDatabase(req.POST)
+	else:
+		redirect('')
+	

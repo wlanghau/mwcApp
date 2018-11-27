@@ -101,6 +101,12 @@ def getMenuDay(meal,dateStr):
         else:
             return menuCalDict[dateStr]["lunch"]
 
+# Get Next Available Row
+# Could potentially use sheet.row_count but does not look unfilled rows			
+def next_available_row(worksheet):
+    str_list = list(filter(None, worksheet.col_values(1)))  # fastest
+    return str(len(str_list)+1)
+
 # Take all data submitted from the application form, properly format it, then send it to the 
 # Production records database. There are two separates tables in the PR relational database structure, 
 # the individual entry needs to be sent to one table and all of the individual component information needs
@@ -109,8 +115,12 @@ def getMenuDay(meal,dateStr):
 def sendToDatabase(formDict):
 	schoolDict = getSchoolData()
 	PRMealsSpreadsheet = productionRecordSpreadsheet.worksheet("[Table] PRMeals")
-	allMealsValues = PRMealsSpreadsheet.get_all_values()
-	allMealsValuesLength = len(allMealsValues)
+	
+	# Loading whole book seems like it is too much
+	# allMealsValues = PRMealsSpreadsheet.get_all_values()
+	# allMealsValuesLength = len(allMealsValues)
+	allMealsValuesLength = next_available_row(PRMealsSpreadsheet)
+	
 
 	today = datetime.datetime.today().strftime('%D')
 	mealDateSplit = formDict['date'].split("-")
@@ -132,22 +142,34 @@ def sendToDatabase(formDict):
 		formDict['adult-meals'],formDict['adult-earned-meals'],"",formDict['daily-notes']]
 		PRMealsSpreadsheet.insert_row(mealRow, allMealsValuesLength+1)
 
+		
+	# WTF?
+	# Reads Table
 	prComponentsAcc = []
-	rowAcc = []
-	i = 1
-	for form in formDict:
-		if i > 10:
-			ind = i % 7
+	# rowAcc = []
+	# i = 1
+	# for form in formDict:
+		# if i > 10:
+			# ind = i % 7
 
-			if ind == 4:
-				rowAcc.extend([today,mealDate,school,meal,menuDay,form[8:],formDict[form]])	
-			elif ind == 3:
-				rowAcc.append(formDict[form])
-				prComponentsAcc.append(rowAcc)
-				rowAcc = []
-			else:
-				rowAcc.append(formDict[form])			
-		i+=1
+			# if ind == 4:
+				# rowAcc.extend([today,mealDate,school,meal,menuDay,form[8:],formDict[form]])	
+			# elif ind == 3:
+				# rowAcc.append(formDict[form])
+				# prComponentsAcc.append(rowAcc)
+				# rowAcc = []
+			# else:
+				# rowAcc.append(formDict[form])			
+		# i+=1
+		
+	# WBL Ideas:
+	# Get all keys, Get unique after planned-, for each unique make row
+	
+	components = [x.split('-')[1] for x in formDict.keys() if 'planned' in x]
+	for comp in components:
+		rowAcc = [today,mealDate,school,meal,menuDay,comp,formDict['planned-'+comp],formDict['prepared-'+comp],
+		formDict['serverd-'+comp],formDict['leftover-'+comp],formDict['wasted-'+comp],formDict['extra-'+comp],formDict['notes-'+comp]]
+		prComponentsAcc.append(rowAcc)
 
 	sendToDatabaseHelper(prComponentsAcc)
 	
@@ -155,23 +177,26 @@ def sendToDatabase(formDict):
 # database. It finds the last row of the database and then for each cell in the row, the value is updated.
 # Makes one call via API to the google sheets database per row.
 def sendToDatabaseHelper(prComponentsRow):
-    PRComponentsSpreadsheet = productionRecordSpreadsheet.worksheet("[Table] PRComponents")    
-    allComponentValues = PRComponentsSpreadsheet.get_all_values()    
-    allComponentValuesLength = len(allComponentValues)
+	PRComponentsSpreadsheet = productionRecordSpreadsheet.worksheet("[Table] PRComponents")    
     
-    cellRange = 'A'+str(allComponentValuesLength+1)+':M'+str(len(prComponentsRow)+allComponentValuesLength+1)
-    # Select a range
-    cell_list = PRComponentsSpreadsheet.range(cellRange)
+	# Too much to read in all data
+	# allComponentValues = PRComponentsSpreadsheet.get_all_values()    
+	# allComponentValuesLength = len(allComponentValues)
+	allComponentValuesLength = next_available_row(PRComponentsSpreadsheet)
+    
+	cellRange = 'A'+str(allComponentValuesLength+1)+':M'+str(len(prComponentsRow)+allComponentValuesLength+1)
+	# Select a range
+	cell_list = PRComponentsSpreadsheet.range(cellRange)
 
-    for row in range(0,len(prComponentsRow)):
-        for col in range(0,len(prComponentsRow[row])):
-            ind = row * 13 + col
-            val = prComponentsRow[row][col]
-            cell = cell_list[ind]
-            cell.value = val
+	for row in range(0,len(prComponentsRow)):
+		for col in range(0,len(prComponentsRow[row])):
+			ind = row * 13 + col
+			val = prComponentsRow[row][col]
+			cell = cell_list[ind]
+			cell.value = val
 
-    # Update in batch
-    PRComponentsSpreadsheet.update_cells(cell_list)
+	# Update in batch
+	PRComponentsSpreadsheet.update_cells(cell_list)
 
 
 
