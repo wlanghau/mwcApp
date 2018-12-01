@@ -20,7 +20,7 @@ from forms import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-	path('', views.enter_pr_data),
+	path('', views.enter_pr_data, name='home'),
 	path('generateTable/', views.generate_table),
 	path('insertProduction/', views.send_to_database),
 ]

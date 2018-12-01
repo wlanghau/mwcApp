@@ -42,13 +42,15 @@ def plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDic
 			returnDict[component] = 0
 	return returnDict
 
+
 def enter_pr_data(req):
 	context = {}
 	context['schools'] = getLiveSchools()
 	context['fruits'] = getMenuData()['am: fruit']['components']
 	context['numFruits'] = ['Fruit 1','Fruit 2','Fruit 3']
 	return render(req, 'home.html', context)
-	
+
+
 def generate_table(req):
 
 	if req.method == 'POST':
@@ -64,7 +66,7 @@ def generate_table(req):
 		
 		# Need to get all schools? Add optional arg for school name
 		schoolDict = getSchoolData()
-		# menuCalDict = getMenuCalData()
+		menuCalDict = getMenuCalData()
 		baselineOptInDict = getBaselineOptInData()
 	
 		meal=req.POST['meal']
@@ -99,8 +101,7 @@ def generate_table(req):
 		context['isExpanded'] = schoolDict[school]['expandedSalad'] == 'True'
 		context['isHs'] = schoolDict[school]['age'] == "912"
 		context['result'] = req.POST		
-		
-		
+
 		context['fruits'] = plannedDictBuilder(fruits,school,meal,baselineOptInDict,schoolDict)
 		context['components'] = plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDict)
 		context['saladComponents'] = plannedDictBuilder(saladComponents,school,meal,baselineOptInDict,schoolDict)
@@ -117,9 +118,9 @@ def generate_table(req):
 		return redirect('')
 		
 def send_to_database(req):
-	print(rerererewrere)
 	if req.method == 'POST':
 		sendToDatabase(req.POST)
+		return redirect('/')
 	else:
-		redirect('')
+		return redirect('/')
 	

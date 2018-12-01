@@ -104,8 +104,11 @@ def getMenuDay(meal,dateStr):
 # Get Next Available Row
 # Could potentially use sheet.row_count but does not look unfilled rows			
 def next_available_row(worksheet):
-    str_list = list(filter(None, worksheet.col_values(1)))  # fastest
-    return str(len(str_list)+1)
+	# str_list = list(filter(None, worksheet.col_values(1)))  # fastest
+	# return str(len(str_list)+1)
+
+	# Some blank rows giving bad errors so just getting entire length
+	return len(worksheet.col_values(1))
 
 # Take all data submitted from the application form, properly format it, then send it to the 
 # Production records database. There are two separates tables in the PR relational database structure, 
@@ -130,17 +133,22 @@ def sendToDatabase(formDict):
 	menuDay = getMenuDay(meal,formDict['date'])
 	school = formDict['school']
 
+	# If we can assume no spaces at the end of the file sheet.append_row works
+	# Insert row cant insert at end of file unless there are empty rows
+	# Work on a check to know for sure but go for append row for now
 
 	if schoolDict[formDict['school']]['age'] == "912":
 		mealRow = [today,mealDate,'20172018',
 		school,meal,"0",formDict['reimbursable-meals'],
 		formDict['adult-meals'],formDict['adult-earned-meals'],"",formDict['daily-notes']]
-		PRMealsSpreadsheet.insert_row(mealRow, allMealsValuesLength+1)
+		# PRMealsSpreadsheet.insert_row(mealRow, allMealsValuesLength+1)
 	else:
 		mealRow = [today,mealDate,'20172018',
 		school,meal,formDict['reimbursable-meals'],"0",
 		formDict['adult-meals'],formDict['adult-earned-meals'],"",formDict['daily-notes']]
-		PRMealsSpreadsheet.insert_row(mealRow, allMealsValuesLength+1)
+		# PRMealsSpreadsheet.insert_row(mealRow, allMealsValuesLength+1)
+
+	PRMealsSpreadsheet.append_row(mealRow)
 
 		
 	# WTF?
@@ -165,10 +173,10 @@ def sendToDatabase(formDict):
 	# WBL Ideas:
 	# Get all keys, Get unique after planned-, for each unique make row
 	
-	components = [x.split('-')[1] for x in formDict.keys() if 'planned' in x]
+	components = [x.split('-', 1)[1] for x in formDict.keys() if 'planned' in x]
 	for comp in components:
 		rowAcc = [today,mealDate,school,meal,menuDay,comp,formDict['planned-'+comp],formDict['prepared-'+comp],
-		formDict['serverd-'+comp],formDict['leftover-'+comp],formDict['wasted-'+comp],formDict['extra-'+comp],formDict['notes-'+comp]]
+		formDict['served-'+comp],formDict['leftover-'+comp],formDict['wasted-'+comp],formDict['extra-'+comp],formDict['notes-'+comp]]
 		prComponentsAcc.append(rowAcc)
 
 	sendToDatabaseHelper(prComponentsAcc)
@@ -185,6 +193,11 @@ def sendToDatabaseHelper(prComponentsRow):
 	allComponentValuesLength = next_available_row(PRComponentsSpreadsheet)
     
 	cellRange = 'A'+str(allComponentValuesLength+1)+':M'+str(len(prComponentsRow)+allComponentValuesLength+1)
+
+	# Need to resize spreadsheet before selecting new cells
+	PRComponentsSpreadsheet.resize(len(prComponentsRow) + allComponentValuesLength + 1,
+								   PRComponentsSpreadsheet.col_count)
+
 	# Select a range
 	cell_list = PRComponentsSpreadsheet.range(cellRange)
 
