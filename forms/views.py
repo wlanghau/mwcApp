@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from forms.googleSheetsData import getMenuCalData,getSchoolData,getMenuData,getBaselineOptInData,sendToDatabase,getLiveSchools,getMenuDay
 
 
@@ -15,6 +16,7 @@ from forms.googleSheetsData import getMenuCalData,getSchoolData,getMenuData,getB
 #credentials = ServiceAccountCredentials.from_json_keyfile_name('./MWCapp-6ea127e5c10a.json', scope)
 #gc = gspread.authorize(credentials)
 
+
 def getGrabAndGo(school,menu,meal, menuSheetDict):
 
 	# Necessary to call again? Going to add to args
@@ -28,7 +30,8 @@ def getGrabAndGo(school,menu,meal, menuSheetDict):
             return []
     else:
         return []
-		
+
+
 def plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDict):
 	returnDict = {}
 	attendance = schoolDict[school]['attendance']
@@ -43,6 +46,7 @@ def plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDic
 	return returnDict
 
 
+@login_required
 def enter_pr_data(req):
 	context = {}
 	context['schools'] = getLiveSchools()
@@ -50,7 +54,7 @@ def enter_pr_data(req):
 	context['numFruits'] = ['Fruit 1','Fruit 2','Fruit 3']
 	return render(req, 'home.html', context)
 
-
+@login_required
 def generate_table(req):
 
 	if req.method == 'POST':
@@ -116,7 +120,8 @@ def generate_table(req):
 		return render(req, 'result.html', context)
 	else:
 		return redirect('')
-		
+
+@login_required
 def send_to_database(req):
 	if req.method == 'POST':
 		sendToDatabase(req.POST)
