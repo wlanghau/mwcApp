@@ -5,38 +5,42 @@ import datetime
 # Authorize API credentials to use the Google Sheets API
 scope = ['https://spreadsheets.google.com/feeds']
 credentials = ServiceAccountCredentials.from_json_keyfile_name('./mwcApp/credentials/MWCapp-168978c46517.json', scope)
-gc = gspread.authorize(credentials)
+# gc = gspread.authorize(credentials)
 
 # Retrieve the three Google Sheets "database" files
 mainDatabaseKey = '19Rszi38ZKUsZqQ1UORV-a-rEORx1LpuFRgjyggEcFrE'
 orderingToolKey = '109ngaK12BJS7u116vbBbrawjPxIxjNlqi8MjoecuRZI'
 productionRecord = '160B7q0IdDYTzjRPemBwbCYVP3jLDhCt3BnD8Av3skAs'
-mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
-orderingToolSpreadsheet = gc.open_by_key(orderingToolKey)
-productionRecordSpreadsheet = gc.open_by_key(productionRecord)
+# mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
+# orderingToolSpreadsheet = gc.open_by_key(orderingToolKey)
+# productionRecordSpreadsheet = gc.open_by_key(productionRecord)
 
 # Return a dictionary contating all of the data from the menuCal table
 # Iterate through the table retrieving the planned breakfast and lunch meal for each day
 def getMenuCalData():
-    menuCalSheet = mainDatabaseSpreadsheet.worksheet("[Table] MenuCal")
-    menuCalData = menuCalSheet.get_all_values()
-    menuCalDict = {}
+	gc = gspread.authorize(credentials)
+	mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
+	menuCalSheet = mainDatabaseSpreadsheet.worksheet("[Table] MenuCal")
+	menuCalData = menuCalSheet.get_all_values()
+	menuCalDict = {}
 
-    for x in range(2,len(menuCalData)-1,2):
-        menuCalDict[menuCalData[x][0]] = {"breakfast": menuCalData[x][2], "lunch":menuCalData[x+1][2]}
+	for x in range(2,len(menuCalData)-1,2):
+		menuCalDict[menuCalData[x][0]] = {"breakfast": menuCalData[x][2], "lunch":menuCalData[x+1][2]}
 
-    return menuCalDict
+	return menuCalDict
 
 # Return a dictionary contating all of the data from the EaterInfo table
 # Iterate through the table retrieving the all of the neccessary information
 # for every school in the BPS school district
 def getSchoolData():
-    schoolsSheet = mainDatabaseSpreadsheet.worksheet("[Table] EaterInfo")
-    schoolsData = schoolsSheet.get_all_values()
-    schoolDict = {}
+	gc = gspread.authorize(credentials)
+	mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
+	schoolsSheet = mainDatabaseSpreadsheet.worksheet("[Table] EaterInfo")
+	schoolsData = schoolsSheet.get_all_values()
+	schoolDict = {}
 
-    for x in range(2,len(schoolsData)):
-        schoolDict[schoolsData[x][2]] = {
+	for x in range(2,len(schoolsData)):
+		schoolDict[schoolsData[x][2]] = {
         "name" : schoolsData[x][2],
         "live" : schoolsData[x][3],
         "age" : schoolsData[x][4],
@@ -48,39 +52,43 @@ def getSchoolData():
         "grabAndGo" : schoolsData[x][10]
         }
 
-    return schoolDict
+	return schoolDict
 
 # Return a dictionary contating all of the data from the Menu table
 # Iterate through the table retrieving the all of the components from
 # each menu item that the BPS serves
 def getMenuData():
-    menuSheet = mainDatabaseSpreadsheet.worksheet("[Table] Menu")
-    menuData = menuSheet.get_all_values()
-    menuSheetDict = {}
+	gc = gspread.authorize(credentials)
+	mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
+	menuSheet = mainDatabaseSpreadsheet.worksheet("[Table] Menu")
+	menuData = menuSheet.get_all_values()
+	menuSheetDict = {}
 
-    for x in range(2,len(menuData)):
-        menuSheetDict[menuData[x][0]] = {}
-        menuSheetDict[menuData[x][0]]["components"] =  menuData[x][1].split(',')
+	for x in range(2,len(menuData)):
+		menuSheetDict[menuData[x][0]] = {}
+		menuSheetDict[menuData[x][0]]["components"] =  menuData[x][1].split(',')
 
-    return menuSheetDict
+	return menuSheetDict
 
 # Return a dictionary contating all of the data from the menuCal table
 # Iterate through the table retrieving the planned breakfast and lunch meal for each day
 def getBaselineOptInData():
-    baselineOptInSheet = orderingToolSpreadsheet.worksheet("Baseline Opt In rates")
-    baselineOptInData = baselineOptInSheet.get_all_values()
-    baselineOptInDict = {}
+	gc = gspread.authorize(credentials)
+	orderingToolSpreadsheet = gc.open_by_key(orderingToolKey)
+	baselineOptInSheet = orderingToolSpreadsheet.worksheet("Baseline Opt In rates")
+	baselineOptInData = baselineOptInSheet.get_all_values()
+	baselineOptInDict = {}
 
 	# Necessary?
-    liveSchoolArray = getLiveSchools()
-    for x in range(1,len(baselineOptInData)):
-        baselineOptInDict[baselineOptInData[x][0]] = {}
-        for y in range(1,len(baselineOptInData[x]) - 1):
-        	if len(baselineOptInData[x][y]) > 1:
-        		percentage = float(baselineOptInData[x][y].strip('%'))/100
-        		baselineOptInDict[baselineOptInData[x][0]][baselineOptInData[0][y]] = percentage
+	liveSchoolArray = getLiveSchools()
+	for x in range(1,len(baselineOptInData)):
+		baselineOptInDict[baselineOptInData[x][0]] = {}
+		for y in range(1,len(baselineOptInData[x]) - 1):
+			if len(baselineOptInData[x][y]) > 1:
+				percentage = float(baselineOptInData[x][y].strip('%'))/100
+				baselineOptInDict[baselineOptInData[x][0]][baselineOptInData[0][y]] = percentage
 
-    return baselineOptInDict
+	return baselineOptInDict
 
 # Return an array of all the current live schools that My Way Cafe is serving
 def getLiveSchools():
@@ -117,6 +125,9 @@ def next_available_row(worksheet):
 # uploaded to google sheets.
 def sendToDatabase(formDict):
 	schoolDict = getSchoolData()
+
+	gc = gspread.authorize(credentials)
+	productionRecordSpreadsheet = gc.open_by_key(productionRecord)
 	PRMealsSpreadsheet = productionRecordSpreadsheet.worksheet("[Table] PRMeals")
 	
 	# Loading whole book seems like it is too much
@@ -185,6 +196,8 @@ def sendToDatabase(formDict):
 # database. It finds the last row of the database and then for each cell in the row, the value is updated.
 # Makes one call via API to the google sheets database per row.
 def sendToDatabaseHelper(prComponentsRow):
+	gc = gspread.authorize(credentials)
+	productionRecordSpreadsheet = gc.open_by_key(productionRecord)
 	PRComponentsSpreadsheet = productionRecordSpreadsheet.worksheet("[Table] PRComponents")    
     
 	# Too much to read in all data
@@ -210,11 +223,3 @@ def sendToDatabaseHelper(prComponentsRow):
 
 	# Update in batch
 	PRComponentsSpreadsheet.update_cells(cell_list)
-
-
-
-
-
-	
-
-	

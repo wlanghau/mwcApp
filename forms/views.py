@@ -54,7 +54,7 @@ def enter_pr_data(req):
 	context['numFruits'] = ['Fruit 1','Fruit 2','Fruit 3']
 	return render(req, 'home.html', context)
 
-@login_required
+
 def generate_table(req):
 
 	if req.method == 'POST':
@@ -119,9 +119,9 @@ def generate_table(req):
 		
 		return render(req, 'result.html', context)
 	else:
-		return redirect('')
+		return redirect('/')
 
-@login_required
+
 def send_to_database(req):
 	if req.method == 'POST':
 		sendToDatabase(req.POST)
