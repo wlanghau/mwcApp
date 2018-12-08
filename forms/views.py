@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+from urllib.error import HTTPError
 from forms.googleSheetsData import getMenuCalData,getSchoolData,getMenuData,getBaselineOptInData,sendToDatabase,getLiveSchools,getMenuDay
 
 
@@ -73,7 +75,7 @@ def generate_table(req):
 		menuCalDict = getMenuCalData()
 		baselineOptInDict = getBaselineOptInData()
 	
-		meal=req.POST['meal']
+		meal = req.POST['meal']
 		date = req.POST['date']
 		
 		menuDay = getMenuDay(meal, date)
@@ -92,7 +94,7 @@ def generate_table(req):
 				
 	
 		menuDayComponents = menuSheetDict[menuDay]['components']
-		fruits = [req.POST[x] for x in ['Fruit 1', 'Fruit 2', 'Fruit 3'] if req.POST[x] is not None]
+		fruits = [req.POST[x] for x in ['Fruit 1', 'Fruit 2', 'Fruit 3'] if req.POST[x] != 'None']
 		saladComponents = menuSheetDict['al: salad bar']['components']
 		grabAndGoBreakComponents = menuSheetDict['hsb: grab n go']['components']
 		grabAndGoLunchComponents = getGrabAndGo(req.POST['school'], menuDay, meal, menuSheetDict)
@@ -104,7 +106,13 @@ def generate_table(req):
 		context['isGrab'] = schoolDict[school]['grabAndGo'] == 'True'
 		context['isExpanded'] = schoolDict[school]['expandedSalad'] == 'True'
 		context['isHs'] = schoolDict[school]['age'] == "912"
+
+		del req.POST['Fruit 1']
+		del req.POST['Fruit 2']
+		del req.POST['Fruit 3']
 		context['result'] = req.POST		
+		context['menuDay'] = menuDay
+
 
 		context['fruits'] = plannedDictBuilder(fruits,school,meal,baselineOptInDict,schoolDict)
 		context['components'] = plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDict)
@@ -113,6 +121,7 @@ def generate_table(req):
 		context['grabAndGoBreakComponents'] = plannedDictBuilder(grabAndGoBreakComponents,school,meal,baselineOptInDict,schoolDict)
 		context['grabAndGoLunchComponents'] = plannedDictBuilder(grabAndGoLunchComponents,school,meal,baselineOptInDict,schoolDict)
 		context['drinks'] = plannedDictBuilder(menuSheetDict["am: drinks"]['components'],school,meal,baselineOptInDict,schoolDict)
+
 		
 	
 		# print(sdsd)
@@ -124,8 +133,12 @@ def generate_table(req):
 
 def send_to_database(req):
 	if req.method == 'POST':
-		sendToDatabase(req.POST)
-		return redirect('/')
+		try:
+			sendToDatabase(req.POST)
+			return redirect('/')
+		except HTTPError as e:
+			if e.code == 502:
+				return HttpResponseRedirect(req.META.get('HTTP_REFERER'))
 	else:
 		return redirect('/')
 	

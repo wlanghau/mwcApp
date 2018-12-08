@@ -104,7 +104,7 @@ def getMenuDay(meal,dateStr):
     menuCalDict = getMenuCalData()
 
     if dateStr in menuCalDict.keys():
-        if meal == 'Breakfast':
+        if meal.lower() == 'breakfast':
             return menuCalDict[dateStr]["breakfast"]
         else:
             return menuCalDict[dateStr]["lunch"]
@@ -141,7 +141,7 @@ def sendToDatabase(formDict):
 	mealDate = mealDateSplit[1]+"/"+mealDateSplit[2]+"/"+mealDateSplit[0]
 
 	meal = formDict['meal'].lower()
-	menuDay = getMenuDay(meal,formDict['date'])
+	menuDay = getMenuDay(meal, formDict['date'])
 	school = formDict['school']
 
 	# If we can assume no spaces at the end of the file sheet.append_row works
