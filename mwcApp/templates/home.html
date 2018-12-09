@@ -2,38 +2,55 @@
 {% extends "layout.html" %}
 {% block content %}
 
-	<h1>My May Café Production Record</h1>
+
 	
 	<form action = "/generateTable/" method = "POST">
 	{% csrf_token %}
-	Submission Date: <input type="date" name="date" d="submission-date" required><br><br>
-	
-		School:
-		<select name="school" required>
-			{% for school in schools %}
+		<div class="row">
+			<div class="form-group col-xs-4 col-md-4">
+				<label for="submission-date" class="control-label">Meal Date</label>
+				<input type="date" name="date" id="submission-date" class="h-50 form-control" required>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-xs-4 col-md-4">
+				<label for="school" class="control-label">School</label>
+				<select name="school" class="custom-select form-control" id="school" required>
+					{% for school in schools %}
+					<option>{{ school }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
+		<div class="row">
+			<div class="form-group col-xs-4 col-md-4">
+				<label for="meal" class="control-label">Meal</label>
+				<select name="meal" id="meal" class="custom-select form-control" required>
+					<option>Breakfast</option>
+					<option>Lunch</option>
+				</select>
+			</div>
+		</div>
 
-			<option>{{ school }}</option>
-
-			{% endfor %}
-		</select>
-	<br><br>
-	Meal: <select name="meal" required>
-		<option>Breakfast</option>
-		<option>Lunch</option>
-		</select>
-	<br><br>
-	
-  Daily Notes: 
-  	<br><textarea rows="4" cols="50" id='daily-notes' name="daily-notes" placeholder="How did the day go?"></textarea><br><br>
+		<div class="row">
+			<div class="form-group col-xs-4 col-md-4">
+				<label for="daily-notes" class="control-label">Daily Notes</label>
+				<textarea rows="4" cols="50" id='daily-notes' name="daily-notes" placeholder="How did the day go?" class="form-control"></textarea>
+			</div>
+		</div>
   	
   	{% for fruitName in numFruits %}
-		{{ fruitName }}
-		<select name="{{ fruitName }}">
-			<option>None</option>
-			{% for fruit in fruits %}
-			<option>{{ fruit }}</option>
-			{% endfor %}
-		</select><br><br>
+		<div class="row">
+			<div class="form-group col-xs-4 col-md-4">
+				<label for="{{ fruitName }}" class="control-label">{{ fruitName }}</label>
+				<select name="{{ fruitName }}" class="custom-select form-control" id="{{ fruitName }}" required>
+					<option>None</option>
+					{% for fruit in fruits %}
+					<option>{{ fruit }}</option>
+					{% endfor %}
+				</select>
+			</div>
+		</div>
 	{% endfor %}
   	<input type = "submit" value = "Submit" class="btn btn-success btn-lg center-block">
   	<br><br>

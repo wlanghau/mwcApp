@@ -4,45 +4,65 @@
 <!-- An API call will send all inputted information to the database upon submission -->
 {% extends "layout.html" %}
 {% block content %}
-<h1>My May Café Production Record</h1>
 <form action = "/insertProduction/" method = "POST">
 {% csrf_token %}
-   <br><br>
-   <table border = 1 bgcolor="DarkGray">
+   <div class="row">
+       <div class="form-group col-xs-4 col-md-4">
+          <label for="meal_date" class="control-label">Meal Date</label>
+          <input id="meal_date" class="h-50 form-control" placeholder="{{meal_date}}" readonly>
+          <input type="hidden" name="date" value="{{meal_date}}">
+      </div>
+       <div class="form-group col-xs-4 col-md-4">
+          <label for="school" class="control-label">Meal Date</label>
+          <input id="school" class="h-50 form-control" placeholder="{{school}}" readonly>
+          <input type="hidden" name="school" value="{{school}}">
+      </div>
+       <div class="form-group col-xs-4 col-md-4">
+          <label for="submission-date" class="control-label">Meal Date</label>
+          <input name="meal" id="submission-date" class="h-50 form-control" placeholder="{{meal}}" readonly>
+          <input type="hidden" name="meal" value="{{meal}}">
+      </div>
+   </div>
 
-      <!-- SUMMARY TABLE WITH ALL INITIAL INPUT -->
-      {% for key, value in result.items %}
+   <div class="row">
+       <div class="form-group col-xs-4 col-md-4">
+          <label for="adult-meals" class="control-label">Adult Meals</label>
+          <input type="number" name="adult-meals" id="adult-meals" class="form-control" required>
+      </div>
+       <div class="form-group col-xs-4 col-md-4">
+          <label for="adult-earned-meals" class="control-label">Reimbursable Meal Count</label>
+          <input type="number" name="adult-earned-meals" id="adult-earned-meals" class="form-control" required>
+      </div>
+       <div class="form-group col-xs-4 col-md-4">
+          <label for="reimbursable-meals" class="control-label">Meal Date</label>
+          <input type="number" name="reimbursable-meals" id="reimbursable-meals" class="form-control" required>
+      </div>
+   </div>
+   <div class="row">
+      <div class="form-group col-md-12">
+          <label for="daily-notes" class="control-label">Daily Notes</label>
+          <textarea id='daily-notes' name="daily-notes" class="form-control">{{daily_notes}}</textarea>
+      </div>
+   </div>
 
-      <tr>
-         <th name="{{ key }}" value="{{ value }}"> {{ key }} </th>
-         <td> {{ value }} </td>
-      </tr>
-      {% endfor %}
-   </table><br><br>
-
-   <!-- HIDE INITIAL INPUT SO IT IS STILL SUBMITTED -->
-   {% for key, value in result.items %}
-   <input type="hidden" name="{{ key }}" value="{{ value }}">
-   {% endfor %}
-
-   Adult Meals: <input type="number" name="adult-meals" id="adult-meals" required><br><br>
-  Adult Earned Meals: <input type="number" name="adult-earned-meals"" id="adult-earned-meals" required><br><br>
-  Reimbursable Meal Count: <input type="number" name="reimbursable-meals" id="reimbursable-meals" required><br><br>
+    <input type = "submit" id="submit_1" value = "Submit" class="btn btn-success btn-lg center-block"
+    onclick="return confirm('Are you sure?')">
 
    <!-- ALL MEALS HAVE A GENERATED DRINKS TABLE -->
    <h2>Drinks</h2>
-   <table border = 1 bgcolor="DarkGray">
-
-      <tr>
-         <th scope="col"> Component </th>
-         <th scope="col"> Planned </th>
-         <th scope="col"> Prepared </th>
-         <th scope="col"> Served </th>
-         <th scope="col"> Leftover </th>
-         <th scope="col"> Wasted </th>
-         <th scope="col"> Extra Needed </th>
-         <th scope="col"> Notes </th>
-      </tr>
+   <table class="table table-bordered table-striped table-sm">
+        <thead>
+          <tr>
+             <th scope="col"> Component </th>
+             <th scope="col"> Planned </th>
+             <th scope="col"> Prepared </th>
+             <th scope="col"> Served </th>
+             <th scope="col"> Leftover </th>
+             <th scope="col"> Wasted </th>
+             <th scope="col"> Extra Needed </th>
+             <th scope="col"> Notes </th>
+          </tr>
+        </thead>
       {% for key,value in drinks.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -50,7 +70,7 @@
          <td>{{ value }}</td>
          <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
-         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -63,7 +83,8 @@
 
    <!-- ALL MEALS HAVE A GENERATED MAIN MENU TABLE -->
    <h2>Main Menu - {{ menuDay }}</h2>
-   <table border = 1 bgcolor="DarkGray">
+   <table class="table table-bordered table-striped table-sm">
+       <thead>
       <tr>
          <th> Component </th>
          <th> Planned </th>
@@ -74,6 +95,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
+      </thead>
       {% for key,value in components.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -81,7 +103,7 @@
          <td>{{ value }}</td>
          <td><input style="width:75px" type="number" id="prepared-{{ key }}" name="prepared-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
-         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" onchange="autocalculate('{{ key }}')" required></td>
+         <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -92,7 +114,8 @@
 
    <!-- ALL MEALS HAVE A GENERATED FRUIT TABLE -->
    <h2>Fruits</h2>
-   <table border = 1 bgcolor="DarkGray">
+   <table class="table table-bordered table-striped table-sm">
+       <thead>
       <tr>
          <th> Component </th>
          <th> Planned </th>
@@ -103,6 +126,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
+      </thead>
       {% for key,value in fruits.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -113,7 +137,7 @@
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
             onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
-            onchange="autocalculate('{{ key }}')" required></td>
+            onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -125,10 +149,8 @@
    <!-- GENERATE A SALAD TABLE IF IT IS LUNCH -->
    {% if isLunch %}
    <h2>Salad Bar</h2>
-   <table border = 1 bgcolor="DarkGray">
-      <tr>
-         <th colspan="8"> Salad Bar</th>
-      </tr>
+   <table class="table table-bordered table-striped table-sm">
+       <thead>
       <tr>
          <th> Component </th>
          <th> Planned </th>
@@ -139,6 +161,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
+      </thead>
       {% for key,value in saladComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -149,7 +172,7 @@
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
             onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
-            onchange="autocalculate('{{ key }}')" required></td>
+            onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -162,7 +185,8 @@
    <!-- GENERATE AN EXPANDED SALAD TABLE IF IT IS AN EXPANDED SCHOOL -->
    {% if isExpanded and isLunch %}
    <h2>Salad Bar Add-On</h2>
-   <table border = 1 bgcolor="DarkGray">
+   <table class="table table-bordered table-striped table-sm">
+       <thead>
       <tr>
          <th> Component </th>
          <th> Planned </th>
@@ -173,6 +197,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
+      </thead>
       {% for key,value in expandedComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -183,7 +208,7 @@
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
             onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
-            onchange="autocalculate('{{ key }}')" required></td>
+            onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -198,7 +223,8 @@
    <!-- GENERATE A GRAB AND GO TABLE IF IT IS A GRAB AD GO SCHOOL -->
    {% if isGrab and isLunch%}
    <h2>Grab N Go</h2>
-   <table border = 1 bgcolor="DarkGray">
+   <table class="table table-bordered table-striped table-sm">
+       <thead>
       <tr>
          <th> Component </th>
          <th> Planned </th>
@@ -209,6 +235,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
+      </thead>
       {% for key,value in grabAndGoLunchComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -219,7 +246,7 @@
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
             onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
-            onchange="autocalculate('{{ key }}')" required></td>
+            onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}" value="">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -232,7 +259,8 @@
 
    {% if isGrab and not isLunch%}
    <h2>Grab N Go</h2>
-   <table border = 1 bgcolor="DarkGray">
+   <table class="table table-bordered table-striped table-sm">
+       <thead>
       <tr>
          <th> Component </th>
          <th> Planned </th>
@@ -243,6 +271,7 @@
          <th> Extra Needed </th>
          <th> Notes </th>
       </tr>
+      </thead>
       {% for key,value in grabAndGoBreakComponents.items %}
       <input type="hidden" name="planned-{{ key }}" value="{{ value }}">
       <tr>
@@ -253,7 +282,7 @@
          <td><input style="width:75px" type="number" id="served-{{ key }}" name="served-{{ key }}" 
             onchange="autocalculate('{{ key }}')" required></td>
          <td><input style="width:75px" type="number" id="leftover-{{ key }}" name="leftover-{{ key }}" 
-            onchange="autocalculate('{{ key }}')" required></td>
+            onchange="autocalculate('{{ key }}')"></td>
          <td id="wastedNum-{{ key }}" ></td>
          <input type="hidden" id="wasted-{{ key }}" name="wasted-{{ key }}">
          <td><input style="width:75px" type="number" id="extra-{{ key }}" name="extra-{{ key }}" required></td>
@@ -264,30 +293,17 @@
    </table><br><br>
    
    {% endif %}
-   <input type = "submit" id="submit" value = "Submit" class="btn btn-success btn-lg center-block">
+   <input type = "submit" id="submit" value = "Submit" class="btn btn-success btn-lg center-block"
+          onclick="return confirm('Are you sure?')">
    <br><br><br>
    
-   <style>
-   table {
-      position: relative;
-      margin-top: 0px;
-      margin-bottom: 20px;
-      margin-right: 20px;
-      margin-left: 20px;
-      background-color: maroon;
-      color: white;
-   }
+<style>
+
    td {
       padding: 6px;
       text-align: center;
-      white-space: nowrap;  
+      white-space: nowrap;
    }
-   input {
-      color: black;
-      border-color: black;
-   }
-
-
 </style>
 </form>
 

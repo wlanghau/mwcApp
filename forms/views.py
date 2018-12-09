@@ -102,6 +102,9 @@ def generate_table(req):
 		school = req.POST['school']
 	
 		context['school'] = school
+		context['meal_date'] = date
+		context['meal'] = meal
+		context['daily_notes'] = req.POST['daily-notes']
 		context['isLunch'] = meal == 'Lunch'
 		context['isGrab'] = schoolDict[school]['grabAndGo'] == 'True'
 		context['isExpanded'] = schoolDict[school]['expandedSalad'] == 'True'
@@ -110,7 +113,7 @@ def generate_table(req):
 		del req.POST['Fruit 1']
 		del req.POST['Fruit 2']
 		del req.POST['Fruit 3']
-		context['result'] = req.POST		
+		context['result'] = req.POST
 		context['menuDay'] = menuDay
 
 

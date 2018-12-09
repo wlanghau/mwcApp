@@ -15,6 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.conf import settings
+from django.conf.urls.static import static
 from forms import views
 
 
@@ -24,4 +26,4 @@ urlpatterns = [
 	path('', views.enter_pr_data, name='home'),
 	path('generateTable/', views.generate_table),
 	path('insertProduction/', views.send_to_database),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
