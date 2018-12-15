@@ -2,8 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from urllib.error import HTTPError
-from forms.googleSheetsData import getMenuCalData,getSchoolData,getMenuData,getBaselineOptInData,sendToDatabase,getLiveSchools,getMenuDay
-
+from forms.googleSheetsData import *
 
 #import logging
 #import datetime
@@ -52,7 +51,7 @@ def plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDic
 def enter_pr_data(req):
 	context = {}
 	context['schools'] = getLiveSchools()
-	context['fruits'] = getMenuData()['am: fruit']['components']
+	context['fruits'] = get_fruit_list()
 	context['numFruits'] = ['Fruit 1','Fruit 2','Fruit 3']
 	return render(req, 'home.html', context)
 
@@ -116,6 +115,8 @@ def generate_table(req):
 		context['result'] = req.POST
 		context['menuDay'] = menuDay
 
+		context['component_list'] = get_component_list()
+		context['fruits_list'] = get_fruit_list()
 
 		context['fruits'] = plannedDictBuilder(fruits,school,meal,baselineOptInDict,schoolDict)
 		context['components'] = plannedDictBuilder(menuDayComponents,school,meal,baselineOptInDict,schoolDict)

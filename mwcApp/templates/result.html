@@ -13,12 +13,12 @@
           <input type="hidden" name="date" value="{{meal_date}}">
       </div>
        <div class="form-group col-xs-4 col-md-4">
-          <label for="school" class="control-label">Meal Date</label>
+          <label for="school" class="control-label">School</label>
           <input id="school" class="h-50 form-control" placeholder="{{school}}" readonly>
           <input type="hidden" name="school" value="{{school}}">
       </div>
        <div class="form-group col-xs-4 col-md-4">
-          <label for="submission-date" class="control-label">Meal Date</label>
+          <label for="submission-date" class="control-label">Meal</label>
           <input name="meal" id="submission-date" class="h-50 form-control" placeholder="{{meal}}" readonly>
           <input type="hidden" name="meal" value="{{meal}}">
       </div>
@@ -45,22 +45,19 @@
       </div>
    </div>
 
-    <input type = "submit" id="submit_1" value = "Submit" class="btn btn-success btn-lg center-block"
-    onclick="return confirm('Are you sure?')">
-
    <!-- ALL MEALS HAVE A GENERATED DRINKS TABLE -->
    <h2>Drinks</h2>
    <table class="table table-bordered table-striped table-sm">
         <thead>
           <tr>
-             <th scope="col"> Component </th>
-             <th scope="col"> Planned </th>
-             <th scope="col"> Prepared </th>
-             <th scope="col"> Served </th>
-             <th scope="col"> Leftover </th>
-             <th scope="col"> Wasted </th>
-             <th scope="col"> Extra Needed </th>
-             <th scope="col"> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
           </tr>
         </thead>
       {% for key,value in drinks.items %}
@@ -86,14 +83,14 @@
    <table class="table table-bordered table-striped table-sm">
        <thead>
       <tr>
-         <th> Component </th>
-         <th> Planned </th>
-         <th> Prepared </th>
-         <th> Served </th>
-         <th> Leftover </th>
-         <th> Wasted </th>
-         <th> Extra Needed </th>
-         <th> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
       </tr>
       </thead>
       {% for key,value in components.items %}
@@ -117,14 +114,14 @@
    <table class="table table-bordered table-striped table-sm">
        <thead>
       <tr>
-         <th> Component </th>
-         <th> Planned </th>
-         <th> Prepared </th>
-         <th> Served </th>
-         <th> Leftover </th>
-         <th> Wasted </th>
-         <th> Extra Needed </th>
-         <th> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
       </tr>
       </thead>
       {% for key,value in fruits.items %}
@@ -152,14 +149,14 @@
    <table class="table table-bordered table-striped table-sm">
        <thead>
       <tr>
-         <th> Component </th>
-         <th> Planned </th>
-         <th> Prepared </th>
-         <th> Served </th>
-         <th> Leftover </th>
-         <th> Wasted </th>
-         <th> Extra Needed </th>
-         <th> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
       </tr>
       </thead>
       {% for key,value in saladComponents.items %}
@@ -188,14 +185,14 @@
    <table class="table table-bordered table-striped table-sm">
        <thead>
       <tr>
-         <th> Component </th>
-         <th> Planned </th>
-         <th> Prepared </th>
-         <th> Served </th>
-         <th> Leftover </th>
-         <th> Wasted </th>
-         <th> Extra Needed </th>
-         <th> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
       </tr>
       </thead>
       {% for key,value in expandedComponents.items %}
@@ -226,14 +223,14 @@
    <table class="table table-bordered table-striped table-sm">
        <thead>
       <tr>
-         <th> Component </th>
-         <th> Planned </th>
-         <th> Prepared </th>
-         <th> Served </th>
-         <th> Leftover </th>
-         <th> Wasted </th>
-         <th> Extra Needed </th>
-         <th> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
       </tr>
       </thead>
       {% for key,value in grabAndGoLunchComponents.items %}
@@ -262,14 +259,14 @@
    <table class="table table-bordered table-striped table-sm">
        <thead>
       <tr>
-         <th> Component </th>
-         <th> Planned </th>
-         <th> Prepared </th>
-         <th> Served </th>
-         <th> Leftover </th>
-         <th> Wasted </th>
-         <th> Extra Needed </th>
-         <th> Notes </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation from historic data"> Planned </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings prepared"> Prepared </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Number of portions served"> Served </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Servings that were saved for another day"> Leftover </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Automatic calculation (Wasted = Prepared - Served - Leftover)"> Wasted </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="If you needed more, how many? Otherwise leave blank."> Extra Needed </th>
+             <th scope="col" data-toggle="tooltip" data-placement="top" title="Make any notes specific to the menu item."> Notes </th>
       </tr>
       </thead>
       {% for key,value in grabAndGoBreakComponents.items %}
@@ -310,10 +307,18 @@
 <script type="text/javascript">
       function autocalculate(comp){
          var prep = document.getElementById("prepared-"+comp).value;
+         if (prep == '0'){
+            document.getElementById("served-"+comp).value = 0;
+            document.getElementById("leftover-"+comp).value = 0;
+         }
          var served = document.getElementById("served-"+comp).value;
          var leftover = document.getElementById("leftover-"+comp).value;
          document.getElementById("wastedNum-"+comp).innerHTML = prep - served - leftover;
          document.getElementById("wasted-"+comp).value = prep - served - leftover;
       }
+
+    $(document).ready(function(){
+        $('[data-toggle="tooltip"]').tooltip();
+    });
    </script>
 {% endblock content %}

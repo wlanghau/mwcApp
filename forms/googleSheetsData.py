@@ -204,12 +204,11 @@ def sendToDatabaseHelper(prComponentsRow):
 	# allComponentValues = PRComponentsSpreadsheet.get_all_values()    
 	# allComponentValuesLength = len(allComponentValues)
 	allComponentValuesLength = next_available_row(PRComponentsSpreadsheet)
-    
 	cellRange = 'A'+str(allComponentValuesLength+1)+':M'+str(len(prComponentsRow)+allComponentValuesLength+1)
 
 	# Need to resize spreadsheet before selecting new cells
 	PRComponentsSpreadsheet.resize(len(prComponentsRow) + allComponentValuesLength + 1,
-								   PRComponentsSpreadsheet.col_count)
+									PRComponentsSpreadsheet.col_count)
 
 	# Select a range
 	cell_list = PRComponentsSpreadsheet.range(cellRange)
@@ -223,3 +222,29 @@ def sendToDatabaseHelper(prComponentsRow):
 
 	# Update in batch
 	PRComponentsSpreadsheet.update_cells(cell_list)
+
+def get_component_list():
+	gc = gspread.authorize(credentials)
+	mainDBSpreadsheet = gc.open_by_key(mainDatabaseKey)
+	list_sheet = mainDBSpreadsheet.worksheet("[Dev] Lists")
+
+	header_list = list_sheet.row_values(1)
+
+	components = list_sheet.col_values(header_list.index('Non Fruit List')+1)
+
+	return components
+
+def get_fruit_list():
+	gc = gspread.authorize(credentials)
+	mainDBSpreadsheet = gc.open_by_key(mainDatabaseKey)
+	list_sheet = mainDBSpreadsheet.worksheet("[Dev] Lists")
+
+	header_list = list_sheet.row_values(1)
+
+	components = list_sheet.col_values(header_list.index('Fruit List') + 1)
+
+	return components
+
+
+
+
