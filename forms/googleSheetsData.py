@@ -223,6 +223,8 @@ def sendToDatabaseHelper(prComponentsRow):
 	# Update in batch
 	PRComponentsSpreadsheet.update_cells(cell_list)
 
+	
+#TODO: Confirm gets whole list
 def get_component_list():
 	gc = gspread.authorize(credentials)
 	mainDBSpreadsheet = gc.open_by_key(mainDatabaseKey)
