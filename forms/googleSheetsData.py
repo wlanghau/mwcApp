@@ -186,8 +186,13 @@ def sendToDatabase(formDict):
 	
 	components = [x.split('-', 1)[1] for x in formDict.keys() if 'planned' in x]
 	for comp in components:
-		rowAcc = [today,mealDate,school,meal,menuDay,comp,formDict['planned-'+comp],formDict['prepared-'+comp],
-		formDict['served-'+comp],formDict['leftover-'+comp],formDict['wasted-'+comp],formDict['extra-'+comp],formDict['notes-'+comp]]
+		rowAcc = [
+			today, mealDate, school, meal, menuDay, comp, formDict['planned-'+comp],
+			formDict['prepared-'+comp], formDict['served-'+comp],
+			formDict['leftover-'+comp], formDict['wasted-'+comp],
+			formDict['extra-' + comp] if formDict['extra-' + comp] != '' else 0,
+			formDict['notes-'+comp]
+		]
 		prComponentsAcc.append(rowAcc)
 
 	sendToDatabaseHelper(prComponentsAcc)
@@ -232,7 +237,7 @@ def get_component_list():
 
 	header_list = list_sheet.row_values(1)
 
-	components = list_sheet.col_values(header_list.index('Non Fruit List')+1)
+	components = list_sheet.col_values(header_list.index('Non Fruit List')+1)[1:]
 
 	return components
 
@@ -243,7 +248,7 @@ def get_fruit_list():
 
 	header_list = list_sheet.row_values(1)
 
-	components = list_sheet.col_values(header_list.index('Fruit List') + 1)
+	components = list_sheet.col_values(header_list.index('Fruit List') + 1)[1:]
 
 	return components
 

@@ -122,8 +122,11 @@ USE_TZ = True
 
 # STATIC_URL = 'https://storage.googleapis.com/mwcapp-223202.appspot.com/static/'
 STATIC_URL = '/static/'
+
+# Need to be on for deployment
 STATIC_ROOT = 'static/'
 
+# Needs to be turned off for deployment
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "static"),
 # ]
