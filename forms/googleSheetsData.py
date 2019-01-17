@@ -11,6 +11,8 @@ credentials = ServiceAccountCredentials.from_json_keyfile_name('./mwcApp/credent
 mainDatabaseKey = '19Rszi38ZKUsZqQ1UORV-a-rEORx1LpuFRgjyggEcFrE'
 orderingToolKey = '109ngaK12BJS7u116vbBbrawjPxIxjNlqi8MjoecuRZI'
 productionRecord = '160B7q0IdDYTzjRPemBwbCYVP3jLDhCt3BnD8Av3skAs'
+
+mainDB_live = '1SHD8PpHVwbqErSb98IUfSCvPmtuBuoharKSvHHW3Snw'
 # mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
 # orderingToolSpreadsheet = gc.open_by_key(orderingToolKey)
 # productionRecordSpreadsheet = gc.open_by_key(productionRecord)
@@ -39,13 +41,13 @@ gspread.Worksheet.append_rows = append_rows
 # Iterate through the table retrieving the planned breakfast and lunch meal for each day
 def getMenuCalData():
     gc = gspread.authorize(credentials)
-    mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
-    menuCalSheet = mainDatabaseSpreadsheet.worksheet("[Table] MenuCal")
+    mainDatabaseSpreadsheet = gc.open_by_key(mainDB_live)
+    menuCalSheet = mainDatabaseSpreadsheet.worksheet("[New DB] MenuCal")
     menuCalData = menuCalSheet.get_all_values()
     menuCalDict = {}
 
-    for x in range(2,len(menuCalData)-1,2):
-        menuCalDict[menuCalData[x][0]] = {"breakfast": menuCalData[x][2], "lunch":menuCalData[x+1][2]}
+    for x in range(2, len(menuCalData)-1):
+        menuCalDict[menuCalData[x][0]] = {"breakfast": menuCalData[x][1], "lunch": menuCalData[x][2]}
 
     return menuCalDict
 
@@ -54,7 +56,7 @@ def getMenuCalData():
 # for every school in the BPS school district
 def getSchoolData():
     gc = gspread.authorize(credentials)
-    mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
+    mainDatabaseSpreadsheet = gc.open_by_key(mainDB_live)
     schoolsSheet = mainDatabaseSpreadsheet.worksheet("[Table] EaterInfo")
     schoolsData = schoolsSheet.get_all_values()
     schoolDict = {}
@@ -79,7 +81,7 @@ def getSchoolData():
 # each menu item that the BPS serves
 def getMenuData():
     gc = gspread.authorize(credentials)
-    mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
+    mainDatabaseSpreadsheet = gc.open_by_key(mainDB_live)
     menuSheet = mainDatabaseSpreadsheet.worksheet("[Table] Menu")
     menuData = menuSheet.get_all_values()
     menuSheetDict = {}
@@ -117,6 +119,7 @@ def getLiveSchools():
     for key in schoolDict:
         if schoolDict[key]["live"] == "TRUE":
             returnArray.append(key)
+    returnArray.sort()
     return returnArray
 
 # return the menuday for the given meal and date string
@@ -179,7 +182,7 @@ def sendToDatabase(formDict):
         formDict['adult-meals'],formDict['adult-earned-meals'],"",formDict['daily-notes']]
         # PRMealsSpreadsheet.insert_row(mealRow, allMealsValuesLength+1)
 
-    PRMealsSpreadsheet.append_row(mealRow)
+    PRMealsSpreadsheet.append_row(mealRow, value_input_option='USER_ENTERED')
 
 
     # WTF?
@@ -225,7 +228,7 @@ def sendToDatabaseHelper(prComponentsRow):
     productionRecordSpreadsheet = gc.open_by_key(productionRecord)
     PRComponentsSpreadsheet = productionRecordSpreadsheet.worksheet("[Table] PRComponents")
 
-    PRComponentsSpreadsheet.append_rows(prComponentsRow)
+    PRComponentsSpreadsheet.append_rows(prComponentsRow, value_input_option='USER_ENTERED')
 
     # Too much to read in all data
     # allComponentValues = PRComponentsSpreadsheet.get_all_values()
@@ -256,7 +259,7 @@ def sendToDatabaseHelper(prComponentsRow):
 #TODO: Confirm gets whole list
 def get_component_list():
     gc = gspread.authorize(credentials)
-    mainDBSpreadsheet = gc.open_by_key(mainDatabaseKey)
+    mainDBSpreadsheet = gc.open_by_key(mainDB_live)
     list_sheet = mainDBSpreadsheet.worksheet("[Dev] Lists")
 
     header_list = list_sheet.row_values(1)
@@ -267,7 +270,7 @@ def get_component_list():
 
 def get_fruit_list():
     gc = gspread.authorize(credentials)
-    mainDBSpreadsheet = gc.open_by_key(mainDatabaseKey)
+    mainDBSpreadsheet = gc.open_by_key(mainDB_live)
     list_sheet = mainDBSpreadsheet.worksheet("[Dev] Lists")
 
     header_list = list_sheet.row_values(1)

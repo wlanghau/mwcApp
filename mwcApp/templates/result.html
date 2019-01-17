@@ -30,11 +30,11 @@
           <input type="number" name="adult-meals" id="adult-meals" class="form-control" required>
       </div>
        <div class="form-group col-xs-4 col-md-4">
-          <label for="adult-earned-meals" class="control-label">Reimbursable Meal Count</label>
+          <label for="adult-earned-meals" class="control-label">Adult Earned Meal Count</label>
           <input type="number" name="adult-earned-meals" id="adult-earned-meals" class="form-control" required>
       </div>
        <div class="form-group col-xs-4 col-md-4">
-          <label for="reimbursable-meals" class="control-label">Adult Earned Meal Count</label>
+          <label for="reimbursable-meals" class="control-label">Reimbursable Meal Count</label>
           <input type="number" name="reimbursable-meals" id="reimbursable-meals" class="form-control" required>
       </div>
    </div>
@@ -80,7 +80,7 @@
 
    <!-- ALL MEALS HAVE A GENERATED MAIN MENU TABLE -->
    <h2>Main Menu - {{ menuDay }}</h2>
-   <table class="table table-bordered table-striped table-sm" id='comp_table'>
+   <table class="table table-bordered table-striped table-sm" id='component_table'>
        <thead>
       <tr>
              <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
@@ -118,13 +118,13 @@
 			</select>
 		</div>
 		<div class="form-group col-xs-2 col-md-2 align-self-center">
-            <button type='button' class="btn btn-success center-block" id='btn_comp_add' >Add Component</button>
+            <button type='button' class="btn btn-success center-block" id='btn_comp_add'>Add Component</button>
 		</div>
 	</div>
 
    <!-- ALL MEALS HAVE A GENERATED FRUIT TABLE -->
    <h2>Fruits</h2>
-   <table class="table table-bordered table-striped table-sm">
+   <table class="table table-bordered table-striped table-sm" id="fruit_table">
        <thead>
       <tr>
              <th scope="col" data-toggle="tooltip" data-placement="top" title="Name of the Menu Item"> Component </th>
@@ -165,7 +165,7 @@
 			</select>
 		</div>
 		<div class="form-group col-xs-4 col-md-4 align-self-center">
-            <button type='button' class="btn btn-success center-block" onclick="add_item('fruit')">Add Fruit</button>
+            <button type='button' class="btn btn-success center-block" id='btn_fruit_add'>Add Fruit</button>
 		</div>
 	</div>
 

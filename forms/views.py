@@ -47,7 +47,7 @@ def plannedDictBuilder(menuDayComponents, school, meal, baselineOptInDict, schoo
     return returnDict
 
 
-@login_required
+# @login_required
 def enter_pr_data(req):
     context = {}
     context['schools'] = getLiveSchools()
