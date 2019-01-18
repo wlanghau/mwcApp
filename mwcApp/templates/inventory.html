@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventory Submission</title>
+</head>
+<body>
+    <!-- Home Page for the web application that provides an input form for the production records -->
+    {% extends "layout.html" %}
+    {% block content %}
+
+
+        <h2>Inventory Report</h2>
+
+        <form action = "/inventorySubmit/" method = "POST">
+        {% csrf_token %}
+            <div class="row">
+                <div class="form-group col-xs-4 col-md-4">
+                    <label for="submission-date" class="control-label">Inventory Date</label>
+                    <input type="date" name="date" id="submission-date" class="h-50 form-control" required>
+                </div>
+            </div>
+            <div class="row">
+                <div class="form-group col-xs-4 col-md-4">
+                    <label for="school" class="control-label">School</label>
+                    <select name="school" class="custom-select form-control" id="school" required>
+                        {% for school in schools %}
+                        <option>{{ school }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        {% for storage in inventory_items %}
+            <h3>{{ storage.type }}</h3>
+            {% for item in storage.items %}
+                <div class="form-row">
+                    <p class="col-xs-4 col-md-4">{{ item }}</p>
+                    <div class="col-xs-2 col-md-2">
+                        <input type="number" id="{{ item }}_cases" name="{{ item }}_cases" placeholder="Cases" class="form-control" required>
+                    </div>
+                    <div class="col-xs-2 col-md-2">
+                        <input type="number" id="{{ item }}_cans" name="{{ item }}_cans" placeholder="Cans/Bags" class="form-control" required>
+                    </div>
+                    <div class="col-xs-4 col-md-4">
+                        <input type="text" id="{{ item }}_notes" name="{{ item }}_notes" placeholder="Notes" class="form-control">
+                    </div>
+                </div>
+            {% endfor %}
+        {% endfor %}
+        <input type = "submit" value = "Submit" class="btn btn-success btn-lg center-block">
+        <br><br>
+      </form>
+      <style>
+      form {
+          position: relative;
+          margin-top: 0px;
+          margin-bottom: 20px;
+          margin-right: 20px;
+          margin-left: 50px;
+       }
+       input {
+          color: black;
+          border-color: black;
+       }
+       select {
+        color: black;
+        border-color: black;
+       }
+       textarea {
+        color: black;
+        border-color: black;
+       }
+    </style>
+    {% endblock content %}
+</body>
+</html>

@@ -26,5 +26,8 @@ urlpatterns = [
 	path('', views.enter_pr_data, name='home'),
 	path('generateTable/', views.generate_table),
 	path('insertProduction/', views.send_to_database),
-	path('get_comp/<school>/<meal>/<comp>/', views.return_comp_planned)
+	path('get_comp/<school>/<meal>/<comp>/', views.return_comp_planned),
+	# New inventory form
+	path('inventory/', views.enter_inventory_data),
+	path('inventorySubmit/', views.inventory_submit)
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

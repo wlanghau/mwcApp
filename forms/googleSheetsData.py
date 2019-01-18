@@ -13,6 +13,7 @@ orderingToolKey = '109ngaK12BJS7u116vbBbrawjPxIxjNlqi8MjoecuRZI'
 productionRecord = '160B7q0IdDYTzjRPemBwbCYVP3jLDhCt3BnD8Av3skAs'
 
 mainDB_live = '1SHD8PpHVwbqErSb98IUfSCvPmtuBuoharKSvHHW3Snw'
+inventory_db_id = '1uPZ16be2qkHsHkAB5d9N6Qw2llfjeeY4ZlFyBkjrOeg'
 # mainDatabaseSpreadsheet = gc.open_by_key(mainDatabaseKey)
 # orderingToolSpreadsheet = gc.open_by_key(orderingToolKey)
 # productionRecordSpreadsheet = gc.open_by_key(productionRecord)
@@ -280,5 +281,26 @@ def get_fruit_list():
     return components
 
 
+def send_to_inventory(formDict):
+    gc = gspread.authorize(credentials)
+    inventory_db = gc.open_by_key(inventory_db_id)
+    inventory_sheet = inventory_db.worksheet("[Table] kitchen_inventory")
 
+    school = formDict['school']
+    today = datetime.datetime.today().strftime('%D')
+    formDateSplit = formDict['date'].split("-")
+    formDate = formDateSplit[1] + "/" + formDateSplit[2] + "/" + formDateSplit[0]
+
+    rows_to_append = []
+    items = [x.split('_', 1)[0] for x in formDict.keys() if 'cases' in x]
+    for item in items:
+        row = [
+            today, formDate, school, item,
+            formDict[item + '_cases'],
+            formDict[item + '_cans'],
+            formDict[item + '_notes']
+        ]
+        rows_to_append.append(row)
+
+    inventory_sheet.append_rows(rows_to_append, value_input_option='USER_ENTERED')
 

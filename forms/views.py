@@ -152,3 +152,55 @@ def return_comp_planned(req, school, meal, comp):
     baselineOptInDict = getBaselineOptInData()
     response_val = plannedDictBuilder([comp], school, meal, baselineOptInDict, schoolDict)[comp]
     return HttpResponse(response_val, content_type="text/plain")
+
+
+def enter_inventory_data(req):
+    context = {}
+    context['schools'] = getLiveSchools()
+    context['inventory_items'] = [
+        {'type': 'Ambient',
+         'items': [
+            "olive oil",
+            "all purpose seasoning",
+            "taco mix",
+            "quick oats",
+            "ketchup - pc",
+            "whole wheat spaghetti",
+            "whole wheat penne pasta",
+            "brown rice",
+            "jerk marinade",
+            "ground black pepper",
+            "salt"
+         ]},
+        {'type': 'Freezer',
+         'items': [
+             "plain bagel",
+             "frozen blueberries"
+         ]},
+        {'type': 'Fridge',
+         'items': [
+             "cream cheese - pc",
+             "pulled chicken",
+             "frozen corn kernels",
+             "liquid eggs",
+             "ranch dressing",
+             "honey mustard",
+             "plain yogurt",
+             "shredded cheddar cheese"
+         ]}
+    ]
+
+    return render(req, 'inventory.html', context)
+
+
+def inventory_submit(req):
+    if req.method == 'POST':
+        try:
+            send_to_inventory(req.POST)
+            return redirect('/')
+        except HTTPError as e:
+            if e.code == 502:
+                return HttpResponseRedirect(req.META.get('HTTP_REFERER'))
+    else:
+        return redirect('/')
+
