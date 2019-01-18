@@ -35,14 +35,14 @@
             <h3>{{ storage.type }}</h3>
             {% for item in storage.items %}
                 <div class="form-row">
-                    <p class="col-xs-4 col-md-4">{{ item }}</p>
+                    <p class="col-xs-3 col-md-3">{{ item }}</p>
                     <div class="col-xs-2 col-md-2">
                         <input type="number" id="{{ item }}_cases" name="{{ item }}_cases" placeholder="Cases" class="form-control" required>
                     </div>
                     <div class="col-xs-2 col-md-2">
                         <input type="number" id="{{ item }}_cans" name="{{ item }}_cans" placeholder="Cans/Bags" class="form-control" required>
                     </div>
-                    <div class="col-xs-4 col-md-4">
+                    <div class="col-xs-5 col-md-5">
                         <input type="text" id="{{ item }}_notes" name="{{ item }}_notes" placeholder="Notes" class="form-control">
                     </div>
                 </div>
