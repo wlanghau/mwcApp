@@ -10,7 +10,7 @@
     {% block content %}
 
 
-        <h2>Inventory Report</h2>
+        <h1>My Way Café Inventory Report</h1>
 
         <form action = "/inventorySubmit/" method = "POST">
         {% csrf_token %}
@@ -37,10 +37,10 @@
                 <div class="form-row">
                     <p class="col-xs-3 col-md-3">{{ item }}</p>
                     <div class="col-xs-2 col-md-2">
-                        <input type="number" id="{{ item }}_cases" name="{{ item }}_cases" placeholder="Cases" class="form-control" required>
+                        <input type="number" id="{{ item }}_cases" name="{{ item }}_cases" placeholder="Cases" class="form-control" min="0" required>
                     </div>
                     <div class="col-xs-2 col-md-2">
-                        <input type="number" id="{{ item }}_cans" name="{{ item }}_cans" placeholder="Cans/Bags" class="form-control" required>
+                        <input type="number" id="{{ item }}_cans" name="{{ item }}_cans" placeholder="Cans/Bags" class="form-control" min="0" required>
                     </div>
                     <div class="col-xs-5 col-md-5">
                         <input type="text" id="{{ item }}_notes" name="{{ item }}_notes" placeholder="Notes" class="form-control">
