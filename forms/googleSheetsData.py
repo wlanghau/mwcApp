@@ -160,7 +160,7 @@ def sendToDatabase(formDict):
     allMealsValuesLength = next_available_row(PRMealsSpreadsheet)
 
 
-    today = datetime.datetime.today().strftime('%D')
+    today = datetime.datetime.today().strftime('%x %X')
     mealDateSplit = formDict['date'].split("-")
     mealDate = mealDateSplit[1]+"/"+mealDateSplit[2]+"/"+mealDateSplit[0]
 
@@ -287,7 +287,7 @@ def send_to_inventory(formDict):
     inventory_sheet = inventory_db.worksheet("[Table] kitchen_inventory")
 
     school = formDict['school']
-    today = datetime.datetime.today().strftime('%D')
+    today = datetime.datetime.today().strftime('%x %X')
     formDateSplit = formDict['date'].split("-")
     formDate = formDateSplit[1] + "/" + formDateSplit[2] + "/" + formDateSplit[0]
 
