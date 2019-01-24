@@ -319,7 +319,14 @@
    <input type = "submit" id="submit" value = "Submit" class="btn btn-success btn-lg center-block"
           onclick="return confirm('Are you sure?')">
    <br><br><br>
-   
+
+    {% if is_print %}
+        <script>
+            setTimeout(function () { window.print(); }, 500);
+            window.onfocus = function () { setTimeout(function () { window.location.replace("/"); }, 500); }
+        </script>
+    {% endif %}
+
 <style>
 
    td {

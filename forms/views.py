@@ -63,6 +63,8 @@ def generate_table(req):
         context['err'] = ''
         req.POST = req.POST.copy()
 
+        context['is_print'] = req.POST['submittype'] == 'Print'
+
         del req.POST['csrfmiddlewaretoken']
         context['result'] = req.POST
 
