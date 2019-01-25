@@ -37,10 +37,10 @@
                 <div class="form-row">
                     <p class="col-xs-3 col-md-3">{{ item }}</p>
                     <div class="col-xs-2 col-md-2">
-                        <input type="number" id="{{ item }}_cases" name="{{ item }}_cases" placeholder="Cases" class="form-control" min="0" required>
+                        <input type="number" id="{{ item }}_cases" name="{{ item }}_cases" placeholder="Cases" class="form-control" min="0" step="any" required>
                     </div>
                     <div class="col-xs-2 col-md-2">
-                        <input type="number" id="{{ item }}_cans" name="{{ item }}_cans" placeholder="Cans/Bags" class="form-control" min="0" required>
+                        <input type="number" id="{{ item }}_cans" name="{{ item }}_cans" placeholder="Cans/Bags" class="form-control" min="0" step="any" required>
                     </div>
                     <div class="col-xs-5 col-md-5">
                         <input type="text" id="{{ item }}_notes" name="{{ item }}_notes" placeholder="Notes" class="form-control">
@@ -52,25 +52,33 @@
         <br><br>
       </form>
       <style>
-      form {
+        form {
           position: relative;
           margin-top: 0px;
           margin-bottom: 20px;
           margin-right: 20px;
           margin-left: 50px;
-       }
-       input {
-          color: black;
-          border-color: black;
-       }
-       select {
-        color: black;
-        border-color: black;
-       }
-       textarea {
-        color: black;
-        border-color: black;
-       }
+        }
+        input {
+            color: black;
+            border-color: black;
+        }
+        select {
+            color: black;
+            border-color: black;
+        }
+        textarea {
+            color: black;
+            border-color: black;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     </style>
     {% endblock content %}
 </body>
